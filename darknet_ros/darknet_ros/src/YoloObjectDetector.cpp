@@ -243,7 +243,8 @@ bool YoloObjectDetector::publishDetectionImage(const cv::Mat& detectionImage) {
   cv_bridge::CvImage cvImage;
   cvImage.header.stamp = ros::Time::now();
   cvImage.header.frame_id = "detection_image";
-  cvImage.encoding = sensor_msgs::image_encodings::BGR8;
+  //cvImage.encoding = sensor_msgs::image_encodings::BGR8; //Commented by leicheng. if use opencv then uncomment it.
+  cvImage.encoding = sensor_msgs::image_encodings::RGB8;
   cvImage.image = detectionImage;
   detectionImagePublisher_.publish(*cvImage.toImageMsg());
   ROS_DEBUG("Detection image has been published.");
@@ -393,7 +394,7 @@ void* YoloObjectDetector::fetchInThread() {
 
 void* YoloObjectDetector::displayInThread(void* ptr) {
   //int c = show_image(buff_[(buffIndex_ + 1) % 3], "YOLO V4");
-  show_image(buff_[(buffIndex_ + 1) % 3], "YOLO V4");
+  show_image(buff_[(buffIndex_ + 1) % 3], "YOLO_V4_by_LeiCheng");
   int c = cv::waitKey(waitKeyDelay_);
   if (c != -1) c = c % 256;
   if (c == 27) {
@@ -485,12 +486,13 @@ void YoloObjectDetector::yolo() {
 
   int count = 0;
   if (!demoPrefix_ && viewImage_) {
-    cv::namedWindow("YOLO", cv::WINDOW_NORMAL);
+    //cv::namedWindow("YOLO", cv::WINDOW_NORMAL);
+    cv::namedWindow("YOLO_V4_by_LeiCheng", cv::WINDOW_NORMAL);//change "YOLO" to "YOLO_V4_by_LeiCheng"
     if (fullScreen_) {
-      cv::setWindowProperty("YOLO", cv::WND_PROP_FULLSCREEN, cv::WINDOW_FULLSCREEN);
+      cv::setWindowProperty("YOLO_V4_by_LeiCheng", cv::WND_PROP_FULLSCREEN, cv::WINDOW_FULLSCREEN);
     } else {
-      cv::moveWindow("YOLO", 0, 0);
-      cv::resizeWindow("YOLO", 640, 480);
+      cv::moveWindow("YOLO_V4_by_LeiCheng", 0, 0);
+      cv::resizeWindow("YOLO_V4_by_LeiCheng", 640, 480);
     }
   }
 
@@ -504,6 +506,7 @@ void YoloObjectDetector::yolo() {
       fps_ = 1. / (what_time_is_it_now() - demoTime_);
       demoTime_ = what_time_is_it_now();
       if (viewImage_) {
+        generate_image(buff_[(buffIndex_ + 1) % 3], disp_);////add by leicheng for saving to .bag  
         displayInThread(0);
       } else {
         generate_image(buff_[(buffIndex_ + 1) % 3], disp_);

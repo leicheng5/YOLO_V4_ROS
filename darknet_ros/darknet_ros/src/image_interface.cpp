@@ -35,7 +35,7 @@ image** load_alphabet_with_file(char* datafile) {
 #ifdef OPENCV
 void generate_image(image p, cv::Mat& disp) {
   int x, y, k;
-  if (p.c == 3) rgbgr_image(p);
+  if (p.c == 3) rgbgr_image(p); //convert BGR (the data read from disk by OpenCV) to RGB //add by leicheng
   // normalize_image(copy);
 
   int step = disp.step;
